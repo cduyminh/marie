@@ -1,4 +1,10 @@
 const request = require('request')
+var ts = Date.now();
+var datetime = new Date(ts);
+let date = String(datetime.getDate())+'/'+String(datetime.getUTCMonth()+1)+'/'+String(datetime.getFullYear());
+let timestamp = date + " " + String(datetime.getHours()) + ":" + String(datetime.getMinutes())+":" + String(datetime.getSeconds());
+console.log(date);
+console.log(timestamp);
 async function readwrite(){
     const a = {
         "id": 2
@@ -8,24 +14,20 @@ async function readwrite(){
     return await readsheet(a);
 }
 function getChatbotToken(req) {
-    var ts = Date.now();
-    var datetime = new Date(ts);
-    let date = String(datetime.getDate())+'/'+String(datetime.getUTCMonth()+1)+'/'+String(datetime.getFullYear());
-    let timestamp = date + " " + String(datetime.getHours()) + ":" + String(datetime.getMinutes())+String(datetime.getSeconds());
-    console.log(date);
-    console.log(timestamp);
     let template = 
     `%Class Report%
-    Date: ${date}
-    Class ID: foo
+    Class Date: ${date}
+    Class ID:
     Educator: ${req.body.payload.userName}
-    Attendance: foo
+    Attendance:
     Recapture Knowledge: 0/1/2/3
     Active Level: 0/1/2/3
     Groupwork: 0/1/2/3
-    Progress: foo
-    Problems: foo
-    Homework: foo
+    Progress: 
+    Problems: 
+    Homework: 
+
+    *Note: Change your class date to the date it happened.
     `;
     request({
         url: `https://zoom.us/oauth/token?grant_type=client_credentials`,
@@ -87,7 +89,7 @@ function sendChat(chatbotToken) {
             'account_id': req.body.payload.accountId,
             'content': {
                 'head': {
-                    'text': 'Here you go!'
+                    'text': timestamp
                 },
                 'body': [{
                     'type': 'message',
